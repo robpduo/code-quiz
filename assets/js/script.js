@@ -30,6 +30,13 @@ let restartBtn = document.createElement("button");
 restartBtn.classList.add("button");
 restartBtn.innerHTML="Restart";
 
+let finalResult = document.createElement("h3");
+
+
+var timer;
+var seconds = 0;
+let displayTimer = document.createElement("h5");
+
 let q1 = {
     questionText: "What are the four pillars of Object Oriented Programing?",
     answer: 1,
@@ -60,7 +67,6 @@ let q3 = {
 let questionBank = [q1, q2, q3];
 
 var viewScore = function () {
-    let finalResult = document.createElement("h3");
     finalResult.textContent = "You got " + correctAnswers + " out of " + questionBank.length + " questions correct";
     questionContainer.appendChild(finalResult);
 }
@@ -72,6 +78,11 @@ var resetPage = function () {
     optionTwo.remove();
     optionThree.remove();
     result.remove();
+    displayTimer.remove();
+    seconds = 0;
+    curQuestion=0;
+    clearInterval(timer);
+
     questionContainer.appendChild(restartBtn);
 
     viewScore();
@@ -81,15 +92,16 @@ var selectAnswer = function(event) {
     result.classList.add("result-prompt");
     resultContainer.appendChild(result);
 
-    console.log(curQuestion, " ", questionBank.length);
     if (event.target.getAttribute("data-iscorrect") == 1 && curQuestion < questionBank.length) {
         result.textContent = "Correct!";
         correctAnswers++;
         event.target.setAttribute("data-iscorrect", 0);
         renderQuestion(questionBank[curQuestion]);
+
     } else if (curQuestion < questionBank.length) {
         result.textContent = "Incorrect!";
         renderQuestion(questionBank[curQuestion]);
+
     }
     
     else  {
@@ -150,8 +162,33 @@ var startHandler = function (event) {
     startBtn.remove();
 
     //render Questions
+    questionContainer.appendChild(displayTimer);
+    timer = setInterval(function () {
+        seconds++;
+        displayTimer.textContent = seconds;
+    }, 1000);
+
     renderQuestion(questionBank[curQuestion]);
 
 }
 
+var loadHomePage = function () {
+    finalResult.remove();
+    restartBtn.remove();
+
+    let title = document.createElement("h1");
+    title.innerHTML = "Coding Quiz Challenge";
+    title.classList = "title";
+
+    let subheadings = document.createElement("p");
+    subheadings.classList = "subheadings";
+    subheadings.innerHTML = "Try to answer the following code-related questions within the time limie. <br/> Keep in mind that incorrect answers will penalize your score/time by ten seconds You have 30 seconds to complete this quiz"
+
+    questionContainer.appendChild(title);
+    questionContainer.appendChild(subheadings);
+    questionContainer.appendChild(startBtn);
+
+}
+
 startBtn.addEventListener("click", startHandler);
+restartBtn.addEventListener("click", loadHomePage);
