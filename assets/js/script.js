@@ -101,6 +101,7 @@ var selectAnswer = function(event) {
     } else if (curQuestion < questionBank.length) {
         result.textContent = "Incorrect!";
         renderQuestion(questionBank[curQuestion]);
+        seconds += 10;
 
     }
     
@@ -166,6 +167,11 @@ var startHandler = function (event) {
     timer = setInterval(function () {
         seconds++;
         displayTimer.textContent = seconds;
+
+        if (seconds == 30) {
+            resetPage();
+        }
+
     }, 1000);
 
     renderQuestion(questionBank[curQuestion]);
